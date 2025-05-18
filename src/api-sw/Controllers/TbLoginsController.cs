@@ -21,14 +21,12 @@ namespace api_sw.Controllers
             _context = context;
         }
 
-        // GET: api/TbLogins
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TbLogin>>> GetTbLogins()
         {
             return await _context.TbLogin.ToListAsync();
         }
 
-        // GET: api/TbLogins/5
         [HttpGet("{id}")]
         public async Task<ActionResult<TbLogin>> GetTbLogin(int id)
         {
@@ -42,7 +40,6 @@ namespace api_sw.Controllers
             return tbLogin;
         }
 
-        // POST: api/TbLogins
         [HttpPost]
         public async Task<ActionResult<TbLogin>> PostTbLogin(TbLogin tbLogin)
         {
@@ -52,13 +49,10 @@ namespace api_sw.Controllers
             return CreatedAtAction(nameof(GetTbLogin), new { id = tbLogin.IdUsuario }, tbLogin);
         }
 
-        // POST: TbLogins/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost("Login")] // Mudança para POST (mais adequado para login)
+
+        [HttpPost("Login")] 
         public async Task<IActionResult> Login([FromBody] LoginCustom loginCustom)
-        {
-            // Validação do modelo
+        {           
             if (!ModelState.IsValid)
             {
                 return BadRequest(new
@@ -74,17 +68,12 @@ namespace api_sw.Controllers
 
             try
             {
-                // 1. Verificar se o usuário existe (sem a senha primeiro para evitar timing attacks)
                 var usuario = await _context.TbLogin
-                    .AsNoTracking() // Melhoria de performance
+                    .AsNoTracking() 
                     .FirstOrDefaultAsync(u => u.Login == loginCustom.Login);
 
                 if (usuario == null)
                 {
-                    // Log de tentativa de login com usuário inexistente (para segurança)
-                    //_logger.LogWarning($"Tentativa de login com usuário inexistente: {loginCustom.Login}");
-
-                    // Mesma mensagem para usuário não encontrado e senha inválida (segurança)
                     return Unauthorized(new
                     {
                         Success = false,
@@ -93,12 +82,8 @@ namespace api_sw.Controllers
                     });
                 }
 
-                // 2. Verificar a senha (usando hash na prática)
-                // ATENÇÃO: Isso é um exemplo - você DEVE usar hash de senha na realidade
                 if (usuario.Senha != loginCustom.Senha)
                 {
-                    // Log de tentativa com senha inválida
-                   // _logger.LogWarning($"Tentativa de login com senha inválida para o usuário: {loginCustom.Login}");
 
                     return Unauthorized(new
                     {
@@ -108,13 +93,6 @@ namespace api_sw.Controllers
                     });
                 }
 
-                // 3. Gerar token JWT (recomendado para autenticação stateless)
-                //var token = GenerateJwtToken(usuario);
-
-                // 4. Registrar login bem-sucedido
-               // _logger.LogInformation($"Login bem-sucedido para o usuário: {usuario.Login}");
-
-                // 5. Retornar resposta com token
                 return Ok(new
                 {
                     Success = true,
@@ -126,7 +104,6 @@ namespace api_sw.Controllers
             }
             catch (Exception ex)
             {
-               // _logger.LogError(ex, "Erro durante o processo de login");
                 return StatusCode(500, new
                 {
                     Success = false,

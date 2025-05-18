@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace api_sw.Migrations
 {
     [DbContext(typeof(MeuContexto))]
-    partial class MeuContextoModelSnapshot : ModelSnapshot
+    [Migration("20250518000752_AtualizacaoTabelas4")]
+    partial class AtualizacaoTabelas4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
@@ -74,6 +77,9 @@ namespace api_sw.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("IdUsuario")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("TarefaRemovida")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Titulo")

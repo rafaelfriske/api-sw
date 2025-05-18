@@ -1,12 +1,13 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models; // Adicione este using
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configuração do banco de dados
 builder.Services.AddDbContext<MeuContexto>(options =>
     options.UseSqlite("Data Source=meubanco.db"));
 
-// Adiciona serviços ao contêiner
+// Configuração dos serviços
 builder.Services.AddControllers();
 
 // Configuração avançada do Swagger
@@ -24,7 +25,6 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 
-    // Adiciona comentários XML (opcional)
     var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     if (File.Exists(xmlPath))
@@ -33,40 +33,36 @@ builder.Services.AddSwaggerGen(c =>
     }
 });
 
-// Configura CORS
+// Configuração do CORS - versão mais segura para desenvolvimento
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("MinhaPoliticaDeCors", builder =>
+    options.AddPolicy("AllowSpecificOrigin", builder =>
     {
-        builder.AllowAnyOrigin()
+        builder.WithOrigins("http://localhost:4200", "https://localhost:4200")
                .AllowAnyMethod()
-               .AllowAnyHeader();
+               .AllowAnyHeader()
+               .AllowCredentials();
     });
 });
 
 var app = builder.Build();
 
-// Configura o pipeline de requisições HTTP
+// Pipeline de requisições HTTP
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Minha API V1");
-
-    // Para acessar na raiz (opcional)
     c.RoutePrefix = string.Empty;
-
-    // Configurações opcionais de UI
     c.DocumentTitle = "Documentação da API";
     c.DisplayRequestDuration();
 });
 
-// Habilite o Swagger também em produção se desejar
-// if (app.Environment.IsDevelopment())
-// {
-// }
-
 app.UseHttpsRedirection();
-app.UseCors("MinhaPoliticaDeCors");
+
+// IMPORTANTE: UseCors deve vir antes de UseAuthorization e MapControllers
+app.UseCors("AllowSpecificOrigin");
+
 app.UseAuthorization();
 app.MapControllers();
+
 app.Run();

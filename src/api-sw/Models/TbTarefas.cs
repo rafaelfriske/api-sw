@@ -15,6 +15,9 @@ namespace api_sw.Models
         public DateTime? DataCriacao { get; set; }
         public DateTime? DataConclusao { get; set; }
 
+        public DateTime? DataAlteracao { get; set; }
+        public int? TarefaRemovida { get; set; } // Se for INTEGER no SQLite
+
         [ForeignKey("Status")]
         public int IdStatus { get; set; }
         public virtual TbStatus Status { get; set; }  // Propriedade de navegação

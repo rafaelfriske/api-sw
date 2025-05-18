@@ -18,14 +18,12 @@ namespace api_sw.Controllers
             _context = context;
         }
 
-        // GET: api/TbStatus
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TbStatus>>> GetTbStatus()
         {
             return await _context.TbStatus.ToListAsync();
         }
 
-        // GET: api/TbStatus/5
         [HttpGet("{id}")]
         public async Task<ActionResult<TbStatus>> GetTbStatus(int id)
         {
@@ -39,7 +37,6 @@ namespace api_sw.Controllers
             return tbStatus;
         }
 
-        // PUT: api/TbStatus/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTbStatus(int id, TbStatus tbStatus)
         {
@@ -69,7 +66,6 @@ namespace api_sw.Controllers
             return NoContent();
         }
 
-        // POST: api/TbStatus
         [HttpPost]
         public async Task<ActionResult<TbStatus>> PostTbStatus(TbStatus tbStatus)
         {
@@ -79,7 +75,6 @@ namespace api_sw.Controllers
             return CreatedAtAction("GetTbStatus", new { id = tbStatus.IdStatus }, tbStatus);
         }
 
-        // DELETE: api/TbStatus/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTbStatus(int id)
         {

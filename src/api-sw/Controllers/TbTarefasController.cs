@@ -20,37 +20,20 @@ namespace api_sw.Controllers
             _context = context;
         }
 
-        // GET: api/TbTarefas
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TbTarefas>>> GetTbTarefas()
         {
             try
-            {
-                // Carrega os dados sem tracking para melhor performance
-                var tarefas = await _context.TbTarefas
+            {                
+                var tarefas = await _context.TbTarefas.Where(a => a.TarefaRemovida == 0)
                     .AsNoTracking()
-                    .ToListAsync();
-
-                // Verifica e corrige datas inválidas
-                foreach (var tarefa in tarefas)
-                {
-                    // Exemplo para um campo chamado DataConclusao
-                    if (tarefa.DataConclusao == DateTime.MinValue)
-                    {
-                        tarefa.DataConclusao = null; // Ou algum valor padrão
-                    }
-
-                    // Repita para outros campos DateTime
-                }
+                    .ToListAsync();         
 
                 return tarefas;
             }
-            catch (Exception ex)
+            catch (DbUpdateConcurrencyException ex)
             {
-                // Log do erro (implemente seu sistema de logging)
-               // _logger.LogError(ex, "Erro ao buscar tarefas");
-
-                return StatusCode(500, "Ocorreu um erro ao processar sua requisição");
+                return StatusCode(500, "Ocorreu um erro ao processar sua requisição" + ex.Message);
             }
         }
 
@@ -107,13 +90,18 @@ namespace api_sw.Controllers
                 return NotFound();
             }
 
-            // Atualiza apenas o status
-            tarefa.IdStatus = statusCustom.IdStatus;
-
-            // Se precisar atualizar a data de conclusão quando concluído
-            if (statusCustom.IdStatus == 2) // Assumindo que 2 = Concluído
+            if (statusCustom.IdStatus == 2)
             {
                 tarefa.DataConclusao = DateTime.Now;
+                tarefa.DataAlteracao = DateTime.Now;
+                tarefa.IdStatus = 2;
+            }
+
+            if (statusCustom.IdStatus == 1)
+            {
+                tarefa.DataAlteracao = DateTime.Now;
+                tarefa.DataConclusao = null;
+                tarefa.IdStatus = 1;
             }
 
             try
@@ -127,23 +115,42 @@ namespace api_sw.Controllers
             }
         }
 
-        // POST: api/TbTarefas
+        [HttpPut("removerTarefa/{id}")]
+        public async Task<IActionResult> Delete(int id, [FromBody] StatusCustom statusCustom)
+        {
+            var tarefa = await _context.TbTarefas.FindAsync(id);
+            if (tarefa == null)
+            {
+                return NotFound();
+            }
+
+            tarefa.TarefaRemovida = 1;
+            tarefa.DataAlteracao = DateTime.Now;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                return StatusCode(500, "Erro ao atualizar status: " + ex.Message);
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult<TbTarefas>> PostTbTarefas(TarefaCustom tarefaCustom)
         {
-            // Definir valores padrão se necessário
             if (tarefaCustom.DataCriacao == null)
             {
                 tarefaCustom.DataCriacao = DateTime.Now;
             }
 
-            // Validar dados recebidos
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            // Mapear TarefaCustom para TbTarefas
             var tbTarefas = new TbTarefas
             {
                 Descricao = tarefaCustom.Descricao,
@@ -151,16 +158,24 @@ namespace api_sw.Controllers
                 DataCriacao = tarefaCustom.DataCriacao,
                 IdStatus = tarefaCustom.IdStatus,
                 IdUsuario = tarefaCustom.idUsuario,
-                
+                TarefaRemovida = 0
+
             };
 
-            _context.TbTarefas.Add(tbTarefas);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.TbTarefas.Add(tbTarefas);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                return StatusCode(500, "Erro ao atualizar status: " + ex.Message);
+            }
+
 
             return CreatedAtAction("GetTbTarefas", new { id = tbTarefas.IdTarefa }, tbTarefas);
         }
 
-        // DELETE: api/TbTarefas/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTbTarefas(int id)
         {
