@@ -4,12 +4,10 @@ Conteudo entregue no projeto
 
 # 🚀 API C# com SQLite
 
-🛠️ Tecnologias utilizadas:
+🛠️ Tecnologias e Linguagens
+<div style="display: flex; gap: 10px; align-items: center;">
+  <img src="https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt="NET" /> <img src="https://img.shields.io/badge/C%23-239120?style=for-for-the-badge&logo=c-sharp&logoColor=white" alt="c" /> <img src="https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="sqlite" /> 
 
-
-  <img src="https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white">
-  <img src="https://img.shields.io/badge/C%23-239120?style=for-for-the-badge&logo=c-sharp&logoColor=white">
-  <img src="https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white">
 
 
 Criei 2 scrips para criação do banco de dados juntamente com as tabelas necessárias e dados iniciais.
