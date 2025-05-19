@@ -2,7 +2,15 @@
 
 Conteudo entregue no projeto
 
-Banco de Dados
+# 🚀 API C# com SQLite
+
+🛠️ Tecnologias utilizadas:
+
+<div align="center">
+  <img src="https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white">
+  <img src="https://img.shields.io/badge/C%23-239120?style=for-for-the-badge&logo=c-sharp&logoColor=white">
+  <img src="https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white">
+</div>
 
 Criei 2 scrips para criação do banco de dados juntamente com as tabelas necessárias e dados iniciais.
 após executas esses scripts atenção na string de conexão do banco no projeto,
