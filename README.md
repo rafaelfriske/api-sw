@@ -57,11 +57,6 @@ Conteudo entregue no projeto
     Adicionar uma tarefa
 
 
-
-Criei 2 scrips para criação do banco de dados juntamente com as tabelas necessárias e dados iniciais.
-após executas esses scripts atenção na string de conexão do banco no projeto,
-pois está com a string de conexão do meu banco local.
-Fiz pelo sqlite, tem um arquivo que chama "meu banco" é só abrir pelo Db Browser
 Link para download: https://sqlitebrowser.org/
 
 ## ⚠️ Regras de negócio do Projeto:
