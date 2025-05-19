@@ -9,6 +9,54 @@ Conteudo entregue no projeto
   <img src="https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt="NET" /> <img src="https://img.shields.io/badge/C%23-239120?style=for-for-the-badge&logo=c-sharp&logoColor=white" alt="c" /> <img src="https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="sqlite" /> 
 
 
+## 📦 Pré-requisitos
+
+- [.NET 8+](https://dotnet.microsoft.com/download)
+- [Visual Studio 2022](https://visualstudio.microsoft.com/) ou [VS Code](https://code.visualstudio.com/)
+
+## 🛠️ Configuração
+
+1. Clone o repositório:
+
+   git clone https://github.com/rafaelfriske/api-sw.git
+
+2. Restaure as dependências:
+
+   dotnet restore
+
+## 🏃 Executando a API
+
+   dotnet run
+
+## 📚 Endpoints
+
+### Controller TbTarefas
+
+#### GET:
+1. /api/tarefas
+  lista todas as tarefas que não foram removidas
+
+2. /api/tarefas/id
+
+    Lista uma tarefa especifica
+
+#### PUT:
+
+1. /api/tarefas/alterarStatus/id
+
+    Altera o status da tarefa
+
+2. /api/tarefas/removerTarefa/id
+
+    Para remover uma tarefa (no caso ele altera o campo TarefaRemovida para 1)
+
+#### POST
+
+1. /api/tarefas
+
+    Adicionar uma tarefa
+
+
 
 Criei 2 scrips para criação do banco de dados juntamente com as tabelas necessárias e dados iniciais.
 após executas esses scripts atenção na string de conexão do banco no projeto,
@@ -16,13 +64,10 @@ pois está com a string de conexão do meu banco local.
 Fiz pelo sqlite, tem um arquivo que chama "meu banco" é só abrir pelo Db Browser
 Link para download: https://sqlitebrowser.org/
 
-Regras de negócio do Banco:
-Ao criar a tarefa, ele adiciona a data prevista e o status inicia como pendente
-Qualquer alteração que for feita, será registrada no campo "DataAlteracao" (se ela estiver marcada como pendente e tiver o data alteração registrado, ela já foi alterada para concluida antes).
-Campo TarefaRemovida serve para que ao clicar em remover a tarefa seja removida da tela, mas não do banco. (A idéia e não perder nenhum dado)
-No status temos os campos Pendente e Concluido apenas.
+## ⚠️ Regras de negócio do Projeto:
 
-Para fazer o login os dados são:
-login: teste@teste.com.br
-senha: 123456
+1. O status inicial da tarefa deve ser pendente
+2. O status devem ser concluido ou pendente
+3. Ao remover uma tarefa, ela continuara no banco. Porém o campo TarefaRemovida irá ser alterado para 1. 
+4. Todas alterações de status alterará o campo DataAlteracao
 
